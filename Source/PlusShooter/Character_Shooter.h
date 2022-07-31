@@ -40,7 +40,7 @@ public:
 	float MoveRightIntensity = 100;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float RotationIntensity = 60;
+	float RotationIntensity = 100;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float Life = 100;

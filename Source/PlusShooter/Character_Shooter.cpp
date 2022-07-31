@@ -3,6 +3,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/InputComponent.h"
 #include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 
 ACharacter_Shooter::ACharacter_Shooter() {
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
@@ -59,9 +60,26 @@ void ACharacter_Shooter::StopJump() {
 }
 
 void ACharacter_Shooter::StartFire() {
-	IsFiring = true;
+//	IsFiring = true;
+	FHitResult HitInfo;
+	bool hasHit = GetWorld()->LineTraceSingleByChannel(
+		HitInfo, 
+		camera->GetComponentLocation(),
+		camera->GetComponentLocation() + camera->GetForwardVector() * 1000,
+		ECC_GameTraceChannel3);
+
+	DrawDebugLine (
+			GetWorld(),
+		camera->GetComponentLocation(),
+		camera->GetComponentLocation() + camera->GetForwardVector() * 1000,
+		FColor::Yellow, false, 
+		3);
+
+	if (hasHit && HitInfo.GetActor()) {
+		HitInfo.GetActor()->Destroy();
+	}
 }
 
 void ACharacter_Shooter::StopFire() {
-	IsFiring = false;
+//	IsFiring = false;
 }
