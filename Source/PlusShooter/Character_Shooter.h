@@ -11,36 +11,41 @@ class PLUSSHOOTER_API ACharacter_Shooter : public ACharacter
 
 public:
 
+	float InitialLife = 100;
+	FRotator InitialRotation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector InitialLocation;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MoveForwardIntensity = 100;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MoveRightIntensity = 100;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FVector InitialLocation;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FRotator InitialRotation;
-
-	float InitialLife = 100;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RotationIntensity = 60;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float Life = 100;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float LifeMax = 100;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float RespawnLife = 3;
 
 void SetupPlayerInputComponent(class UInputComponent* inputcomponent) override;
 void MoveForward(float value);
-void MoveRight(float value);	 
+void MoveRight(float value);
+void RotateYaw(float value);
+void RotatePitch(float value);	
+void StartJump();
+void StopJump();
+
 void Tick(float deltaTime) override; 
 
-ACharacter_Shooter();
+void BeginPlay() override;
 
-protected:
-	 void BeginPlay() override;
+ACharacter_Shooter();
 };

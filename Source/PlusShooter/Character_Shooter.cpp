@@ -6,6 +6,16 @@ ACharacter_Shooter::ACharacter_Shooter() {
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void ACharacter_Shooter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
+	InputComponent->BindAxis("MoveForward", this, &ACharacter_Shooter::MoveForward);
+	InputComponent->BindAxis("MoveRight", this, &ACharacter_Shooter::MoveRight);
+	InputComponent->BindAxis("Turn", this, &ACharacter_Shooter::RotateYaw);
+	InputComponent->BindAxis("LookUp", this, &ACharacter_Shooter::RotatePitch);
+	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter_Shooter::StartJump);
+	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter_Shooter::StopJump);
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
 void ACharacter_Shooter::BeginPlay() {
 	Super::BeginPlay();
 	InitialLocation = GetActorLocation();
@@ -14,19 +24,27 @@ void ACharacter_Shooter::BeginPlay() {
 }
 
 void ACharacter_Shooter::MoveForward(float value) {
-	float DeltaTime = GetWorld()->GetDeltaSeconds();
-	AddActorLocalOffset(FVector(value * MoveForwardIntensity * DeltaTime, 0, 0));
+	AddMovementInput(GetActorForwardVector(), value);
 }
 
 void ACharacter_Shooter::MoveRight(float value) {
-	float DeltaTime = GetWorld()->GetDeltaSeconds();
-	AddActorLocalOffset(FVector(0, value* MoveRightIntensity * DeltaTime, 0));
+	AddMovementInput(GetActorRightVector(), value);
 }
 
-void ACharacter_Shooter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
-	InputComponent->BindAxis("MoveForward", this, &ACharacter_Shooter::MoveForward);
-	InputComponent->BindAxis("MoveRight", this, &ACharacter_Shooter::MoveRight);
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+void ACharacter_Shooter::RotateYaw(float value) {
+	AddControllerYawInput(value * RotationIntensity * GetWorld()->GetDeltaSeconds());
+}
+
+void ACharacter_Shooter::RotatePitch(float value) {
+	AddControllerPitchInput(value * RotationIntensity * GetWorld()->GetDeltaSeconds());
+}
+
+void ACharacter_Shooter::StartJump() {
+	Jump();
+}
+
+void ACharacter_Shooter::StopJump() {
+	StopJumping();
 }
 
 void ACharacter_Shooter::Tick(float deltaTime) {
