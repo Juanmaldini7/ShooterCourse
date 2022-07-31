@@ -1,9 +1,19 @@
 #include "Character_Shooter.h"
-#include "Engine/World.h"
+#include "Camera/CameraComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Components/InputComponent.h"
+#include "Engine/World.h"
 
 ACharacter_Shooter::ACharacter_Shooter() {
-	PrimaryActorTick.bCanEverTick = true;
+	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
+	camera->bUsePawnControlRotation = true;
+	camera->SetupAttachment(GetRootComponent());
+
+	arms = CreateDefaultSubobject<USkeletalMeshComponent>("Arms");
+	arms->SetupAttachment(camera);
+
+	weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
+	weapon->SetupAttachment(arms, "GripPoint");
 }
 
 void ACharacter_Shooter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -13,7 +23,8 @@ void ACharacter_Shooter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	InputComponent->BindAxis("LookUp", this, &ACharacter_Shooter::RotatePitch);
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter_Shooter::StartJump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter_Shooter::StopJump);
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	InputComponent->BindAction("Fire", IE_Pressed, this, &ACharacter_Shooter::StartFire);
+	InputComponent->BindAction("Fire", IE_Released, this, &ACharacter_Shooter::StopFire);
 }
 
 void ACharacter_Shooter::BeginPlay() {
@@ -47,17 +58,10 @@ void ACharacter_Shooter::StopJump() {
 	StopJumping();
 }
 
-void ACharacter_Shooter::Tick(float deltaTime) {
-	if (Life <= 0) {
-		if (RespawnLife > 0) {
-			
-			SetActorLocation(InitialLocation);
-			SetActorRotation(InitialRotation);
-			RespawnLife--;
-			Life = InitialLife;
-		}
-		else {
-			Destroy();
-		}
-	}
+void ACharacter_Shooter::StartFire() {
+	IsFiring = true;
+}
+
+void ACharacter_Shooter::StopFire() {
+	IsFiring = false;
 }

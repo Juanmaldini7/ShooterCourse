@@ -9,10 +9,26 @@ class PLUSSHOOTER_API ACharacter_Shooter : public ACharacter
 {
 	GENERATED_BODY()
 
+private:
+
+	void MoveForward(float value);
+	void MoveRight(float value);
+	void RotateYaw(float value);
+	void RotatePitch(float value);	
+	void StartJump();
+	void StopJump();
+	void StartFire();
+	void StopFire();
+
 public:
+
+	ACharacter_Shooter();
 
 	float InitialLife = 100;
 	FRotator InitialRotation;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsFiring;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector InitialLocation;
@@ -35,17 +51,18 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float RespawnLife = 3;
 
-void SetupPlayerInputComponent(class UInputComponent* inputcomponent) override;
-void MoveForward(float value);
-void MoveRight(float value);
-void RotateYaw(float value);
-void RotatePitch(float value);	
-void StartJump();
-void StopJump();
+	UPROPERTY(VisibleAnywhere)
+	class UCameraComponent* camera;
+	
+	UPROPERTY(VisibleAnywhere)
+	class USkeletalMeshComponent* arms;
 
-void Tick(float deltaTime) override; 
+	UPROPERTY(VisibleAnywhere)
+	class USkeletalMeshComponent* weapon;
 
-void BeginPlay() override;
+	void SetupPlayerInputComponent(class UInputComponent* inputcomponent) override;
 
-ACharacter_Shooter();
+	void BeginPlay() override;
+
+
 };

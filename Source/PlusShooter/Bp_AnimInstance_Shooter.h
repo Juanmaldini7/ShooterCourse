@@ -13,6 +13,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float BlendSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsJumping;
+	
 	void NativeUpdateAnimation(float delta)  override;
 };
  
