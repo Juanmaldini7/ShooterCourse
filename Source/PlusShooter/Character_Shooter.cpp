@@ -3,6 +3,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/InputComponent.h"
 #include "Engine/World.h"
+#include "TimerManager.h"
 #include "DrawDebugHelpers.h"
 
 ACharacter_Shooter::ACharacter_Shooter() {
@@ -60,7 +61,16 @@ void ACharacter_Shooter::StopJump() {
 }
 
 void ACharacter_Shooter::StartFire() {
-//	IsFiring = true;
+	GetWorldTimerManager().SetTimer(TimerHandleShoot, this, &ACharacter_Shooter::ShootTimer, 0.27, true);
+}
+
+void ACharacter_Shooter::StopFire() {
+	IsFiring = false;
+	GetWorldTimerManager().ClearTimer(TimerHandleShoot);
+}
+
+void ACharacter_Shooter::ShootTimer() {
+
 	FHitResult HitInfo;
 	bool hasHit = GetWorld()->LineTraceSingleByChannel(
 		HitInfo, 
@@ -80,6 +90,4 @@ void ACharacter_Shooter::StartFire() {
 	}
 }
 
-void ACharacter_Shooter::StopFire() {
-//	IsFiring = false;
-}
+

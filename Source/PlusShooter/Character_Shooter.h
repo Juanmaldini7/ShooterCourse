@@ -11,6 +11,8 @@ class PLUSSHOOTER_API ACharacter_Shooter : public ACharacter
 
 private:
 
+	FTimerHandle TimerHandleShoot;
+
 	void MoveForward(float value);
 	void MoveRight(float value);
 	void RotateYaw(float value);
@@ -19,6 +21,7 @@ private:
 	void StopJump();
 	void StartFire();
 	void StopFire();
+	void ShootTimer();
 
 public:
 
